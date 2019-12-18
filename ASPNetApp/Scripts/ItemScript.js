@@ -4,9 +4,10 @@
         "ajax": loadDataItem(),
         "responsive": true
     });
+    LoadSupplier();
 });
 function loadDataItem() {
-    debugger;
+    //debugger;
     $.ajax({
         url: "/Items/List",
         type: "GET",
@@ -14,10 +15,10 @@ function loadDataItem() {
         dataType: "json",
         async: false,
         success: function (result) {
-            debugger;
+            //debugger;
             var html = '';
-            const obj = JSON.parse(result);
-            $.each(obj, function (key, item) {
+            //const obj = JSON.parse(result);
+            $.each(result, function (key, item) {
                 html += '<tr>';
                 html += '<td>' + item.Name + '</td>';
                 html += '<td>' + item.Stock + '</td>';
@@ -34,3 +35,32 @@ function loadDataItem() {
         }
     });
 }
+
+var Suppliers = []
+function LoadSupplier(element) {
+    //debugger;
+    if (Suppliers.length == 0) {
+        $.ajax({
+            type: "Get",
+            url: "/Suppliers/LoadSupplier",
+            success: function (data) {  
+                Suppliers = data;
+                renderSupplier(element);
+            }
+        })
+    }
+    else {
+        renderSupplier(element);
+    }
+}
+
+function renderSupplier(element) {
+    //debugger;
+    var $ele = $(element);
+    $ele.empty();
+    $ele.append($('<option/>').val('0').text('Select Supplier'));
+    $.each(Suppliers, function (i, val) {
+        $ele.append($('<option/>').val(val.Id).text(val.Name));
+    })
+}
+LoadSupplier($('#Supplier'));

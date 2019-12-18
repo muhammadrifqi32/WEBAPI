@@ -54,7 +54,6 @@ D:\Metrodata\Project\WEBAPI\Data\bin\Debug\EntityFramework.dll
 D:\Metrodata\Project\WEBAPI\Data\bin\Debug\EntityFramework.SqlServer.dll
 D:\Metrodata\Project\WEBAPI\Data\bin\Debug\EntityFramework.xml
 D:\Metrodata\Project\WEBAPI\Data\bin\Debug\EntityFramework.SqlServer.xml
-D:\Metrodata\Project\WEBAPI\Data\obj\Debug\Data.csprojResolveAssemblyReference.cache
 D:\Metrodata\Project\WEBAPI\Data\obj\Debug\Data.Migrations.suppliermodel.resources
 D:\Metrodata\Project\WEBAPI\Data\obj\Debug\Data.Migrations.AddModelItem.resources
 D:\Metrodata\Project\WEBAPI\Data\obj\Debug\Data.csproj.GenerateResource.Cache

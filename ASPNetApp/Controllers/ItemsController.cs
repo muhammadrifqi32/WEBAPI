@@ -35,14 +35,15 @@ namespace ASPNetApp.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadAsAsync<IList<Item>>();
-                var json = JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings()
-                {
-                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                });
-                return Json(json, JsonRequestBehavior.AllowGet);
+                //var json = JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings()
+                //{
+                //    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                //});
+                return Json(data, JsonRequestBehavior.AllowGet);
             }
             return Json("Internal Server Error", JsonRequestBehavior.AllowGet);
-        }
+        }      
+
 
         //    // GET: Items/Details/5
         //    public ActionResult Details(int id)

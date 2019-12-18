@@ -1,6 +1,7 @@
 ﻿//using ASPNetApp.ViewModels;
 using ASPNetApp.Base;
-using ASPNetApp.Models;
+//using ASPNetApp.Models;
+using Data.Model;
 using Data.ViewModel;
 using Newtonsoft.Json;
 using System;
@@ -17,7 +18,6 @@ namespace ASPNetApp.Controllers
     public class SuppliersController : Controller
     {
         Port getPort = new Base.Port();
-        Bootcamp32Entities2 myContext = new Bootcamp32Entities2();
         readonly HttpClient client = new HttpClient();
         // GET: Suppliers
         public ActionResult Index()
@@ -36,7 +36,7 @@ namespace ASPNetApp.Controllers
             HttpResponseMessage response = await client.GetAsync("Suppliers");
             if (response.IsSuccessStatusCode)
             {
-                var data = await response.Content.ReadAsAsync<tb_m_supplier[]>();
+                var data = await response.Content.ReadAsAsync<Supplier[]>();
                 var json = JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings()
                 {
                     ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -100,7 +100,7 @@ namespace ASPNetApp.Controllers
             HttpResponseMessage response = await client.GetAsync("Suppliers");
             if (response.IsSuccessStatusCode)
             {
-                var data = await response.Content.ReadAsAsync<tb_m_supplier[]>();
+                var data = await response.Content.ReadAsAsync<Supplier[]>();
                 var supplier = data.FirstOrDefault(s => s.Id == id);
                 var json = JsonConvert.SerializeObject(supplier, Formatting.None, new JsonSerializerSettings()
                 {
@@ -119,6 +119,31 @@ namespace ASPNetApp.Controllers
             };
             var result = client.DeleteAsync("Suppliers/" + id).Result;
             return Json(result);
+        }
+
+        public JsonResult LoadSupplier()
+        {
+            IEnumerable<Supplier> supplier = null;
+
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(getPort.client)
+            };
+            var responseTask = client.GetAsync("Suppliers");
+            responseTask.Wait();
+            var result = responseTask.Result;
+            if (result.IsSuccessStatusCode)
+            {
+                var readTask = result.Content.ReadAsAsync<IList<Supplier>>();
+                readTask.Wait();
+                supplier = readTask.Result;
+            }
+            else
+            {
+                supplier = Enumerable.Empty<Supplier>();
+                ModelState.AddModelError(string.Empty, "Server Error");
+            }
+            return Json(supplier, JsonRequestBehavior.AllowGet);
         }
 
         //// GET: Supplier/Details/5
