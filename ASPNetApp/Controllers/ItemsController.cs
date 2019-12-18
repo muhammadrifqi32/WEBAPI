@@ -2,11 +2,13 @@
 //using ASPNetApp.ViewModels;
 using Data.Context;
 using Data.Model;
+using Data.ViewModel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -42,8 +44,59 @@ namespace ASPNetApp.Controllers
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
             return Json("Internal Server Error", JsonRequestBehavior.AllowGet);
-        }      
+        }
 
+        public JsonResult InsertOrUpdate(ItemVM itemVM)
+        {
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(getPort.client)
+            };
+            var myContent = JsonConvert.SerializeObject(itemVM);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            if (itemVM.Id == 0)
+            {
+                var result = client.PostAsync("Items", byteContent).Result;
+                return Json(result);
+            }
+            else
+            {
+                var result = client.PutAsync("Items/" + itemVM.Id, byteContent).Result;
+                return Json(result);
+            }
+        }
+
+        public async Task<JsonResult> GetById(int id)
+        {
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(getPort.client)
+            };
+            HttpResponseMessage response = await client.GetAsync("Items");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsAsync<Item[]>();
+                var item = data.FirstOrDefault(i => i.Id == id);
+                var json = JsonConvert.SerializeObject(item, Formatting.None, new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                });
+                return Json(json, JsonRequestBehavior.AllowGet);
+            }
+            return Json("Internal Server Error", JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Delete(int id)
+        {
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(getPort.client)
+            };
+            var result = client.DeleteAsync("Items/" + id).Result;
+            return Json(result);
+        }
 
         //    // GET: Items/Details/5
         //    public ActionResult Details(int id)

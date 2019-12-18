@@ -43,7 +43,7 @@ namespace Data.Repository
         public IEnumerable<Item> Get()
         {
             //throw new NotImplementedException();
-            var sup = myContext.Items.Include("Supplier");
+            var sup = myContext.Items.Include("Supplier").Where(i => i.IsDelete == false);
             return sup;
         }
 

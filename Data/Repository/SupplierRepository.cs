@@ -44,7 +44,7 @@ namespace Data.Repository
         public IEnumerable<Supplier> Get()
         {
             //throw new NotImplementedException();
-            return myContext.Suppliers.Where(s => s.IsDelete ==  false).ToList();
+            return myContext.Suppliers.Where(s => s.IsDelete ==  false).ToList().OrderByDescending(s => s.Id);
         }
 
         public Supplier Get(int Id)

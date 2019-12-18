@@ -1,6 +1,9 @@
 ﻿$(document).ready(function () {
     $('#items').dataTable({
-        "columns": [null, null, null, null, { "bSortable": false }],
+        "columnDefs": [{
+            "orderable": false,
+            "targets": 4,
+        }],
         "ajax": loadDataItem(),
         "responsive": true
     });
@@ -24,8 +27,8 @@ function loadDataItem() {
                 html += '<td>' + item.Stock + '</td>';
                 html += '<td>' + item.Price + '</td>';
                 html += '<td>' + item.Supplier.Name + '</td>';
-                html += '<td><a href="#" class="btn btn-success" onclick="return GetById(\'' + item.Id + '\')"><i class="fa fa-pencil"> Edit</i></a> ';
-                html += '| <a href="#" class="btn btn-danger" onclick="Delete(' + item.Id + ')"><i class="fa fa-trash"> Delete</i></a></td > ';
+                html += '<td><button type="button" class="btn btn-warning" id="Update" onclick="return GetbyId(' + item.Id + ')"><i class="fa fa-pencil"> Edit</i></button> ';
+                html += '<button type="button" class="btn btn-danger" id="Delete" onclick="return Delete(' + item.Id + ')" ><i class="fa fa-trash"> Delete</i></button ></td > ';
                 html += '</tr>';
             });
             $('.itemtbody').html(html);
@@ -64,3 +67,130 @@ function renderSupplier(element) {
     })
 }
 LoadSupplier($('#Supplier'));
+
+function ClearScreen() {
+    $('#Id').val('');
+    $('#Name').val('');
+    $('#Email').val('');
+    $('#Update').hide();
+    $('#Save').show();
+}
+
+function ResetTable() {
+    $('#suppliers').dataTable().destroy();
+    $('#suppliers').dataTable({
+        "ajax": loadDataSupplier()
+    })
+}
+
+
+function Save() {
+    //if ($('#Name').val() == 0) {
+    //    Swal.fire({
+    //        position: 'center',
+    //        type: 'error',
+    //        title: 'Please Full Fill The Name',
+    //        showConfirmButton: false,
+    //        timer: 1500
+    //    });
+    //} else if ($('#Email').val() == 0) {
+    //    Swal.fire({
+    //        position: 'center',
+    //        type: 'error',
+    //        title: 'Please Full Fill The Email',
+    //        showConfirmButton: false,
+    //        timer: 1500
+    //    });
+    //} else {
+        var item = new Object();
+        item.Id = $('#Id').val();
+        item.Name = $('#Name').val();
+        item.Stock = $('#Stock').val();
+        item.Price = $('#Stock').val();
+        item.Supplier = $('#Supplier').val();
+        $.ajax({
+            type: 'POST',
+            url: '/Items/InsertOrUpdate/',
+            data: supplier
+        }).then((result) => {
+            //debugger;
+            if (result.StatusCode == 200) {
+                Swal.fire({
+                    position: 'center',
+                    type: 'success',
+                    title: 'Insert Successfully',
+                });
+                ResetTable()
+            }
+            else {
+                Swal.fire('Error', 'Insert Fail', 'error');
+                ClearScreen();
+            }
+        });
+    //}
+}
+
+function GetbyId(Id) {
+    //debugger;
+    $('#Name');
+    $('#Stock');
+    $('#Price');
+    $('#Supplier');
+    $.ajax({
+        url: "/Items/GetbyId/" + Id,
+        type: "GET",
+        contentType: "application/json;charset=UTF-8",
+        dataType: "json",
+        async: false,
+        success: function (result) {
+            const obj = JSON.parse(result);
+            $('#Id').val(obj.Id);
+            $('#Name').val(obj.Name);
+            $('#Stock').val(obj.Email);
+            $('#Price').val(obj.Price);
+            $('#Supplier').val(obj.Supplier);
+
+            $('#myModal').modal('show');
+            $('#Update').show();
+            $('#Save').hide();
+        },
+        error: function (errormessage) {
+            alert(errormessage.responseText);
+        }
+    });
+    return false;
+}
+
+function Delete(Id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.value) {
+            debugger;
+            $.ajax({
+                url: "/Items/Delete/",
+                type: "POST",
+                data: { id: Id },
+            }).then((result) => {
+                debugger;
+                if (result.StatusCode == 200) {
+                    Swal.fire({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Delete Successfully'
+                    });
+                    ResetTable()
+                }
+                else {
+                    Swal.fire('Error', 'Update Fail', 'error');
+                    ClearScreen();
+                }
+            });
+        }
+    })
+}

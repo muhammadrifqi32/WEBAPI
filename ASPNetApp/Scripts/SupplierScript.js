@@ -1,6 +1,9 @@
 ﻿$(document).ready(function () {
     $('#suppliers').dataTable({
-        "columns": [null, null, { "bSortable": false }],
+        "columnDefs": [{
+            "orderable": false,
+            "targets": 2,
+        }],
         "ajax": loadDataSupplier(),
         "responsive": true
     });
@@ -66,9 +69,6 @@ function Save() {
                     type: 'success',
                     title: 'Insert Successfully',
                 });
-                $('#myModal').modal('hide')
-                //window.location.href = "/Suppliers/";
-                //$('#myModal').modal("hide");
                 ResetTable()
             }
             else {
