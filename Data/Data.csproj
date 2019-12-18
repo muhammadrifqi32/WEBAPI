@@ -83,12 +83,6 @@
       <DependentUpon>201912160410146_AddModelItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ASPNetApp\ASPNetApp.csproj">
-      <Project>{56b44a8b-0520-43ee-8bf2-a88b94ad59eb}</Project>
-      <Name>ASPNetApp</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

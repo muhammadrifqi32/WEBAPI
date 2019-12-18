@@ -1,6 +1,7 @@
 ﻿using ASPNetApp.Base;
-using ASPNetApp.Models;
-using ASPNetApp.ViewModels;
+//using ASPNetApp.ViewModels;
+using Data.Context;
+using Data.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ namespace ASPNetApp.Controllers
     public class ItemsController : Controller
     {
         Port getPort = new Base.Port();
-        //Bootcamp32Entities2 myContext = new Bootcamp32Entities2();
         readonly HttpClient client = new HttpClient();
         // GET: Items
         public ActionResult Index()
@@ -34,7 +34,7 @@ namespace ASPNetApp.Controllers
             HttpResponseMessage response = await client.GetAsync("Items");
             if (response.IsSuccessStatusCode)
             {
-                var data = await response.Content.ReadAsAsync<tb_m_item[]>();
+                var data = await response.Content.ReadAsAsync<IList<Item>>();
                 var json = JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings()
                 {
                     ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

@@ -64,11 +64,12 @@ function Save() {
                 Swal.fire({
                     position: 'center',
                     type: 'success',
-                    title: 'Insert Successfully'
+                    title: 'Insert Successfully',
                 });
+                $('#myModal').modal('hide')
                 //window.location.href = "/Suppliers/";
                 //$('#myModal').modal("hide");
-                loadDataSupplier();
+                ResetTable()
             }
             else {
                 Swal.fire('Error', 'Insert Fail', 'error');
@@ -107,7 +108,7 @@ function Update() {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                loadDataSupplier();
+                ResetTable()
             }
             else {
                 Swal.fire('Error', 'Update Fail', 'error');
@@ -152,6 +153,13 @@ function ClearScreen() {
     $('#Save').show();
 }
 
+function ResetTable() {
+    $('#suppliers').dataTable().destroy();
+    $('#suppliers').dataTable({
+        "ajax": loadDataSupplier()
+    })
+}
+
 function Delete(Id) {
     Swal.fire({
         title: 'Are you sure?',
@@ -175,7 +183,7 @@ function Delete(Id) {
                         type: 'success',
                         title: 'Delete Successfully'
                     });
-                    loadDataSupplier();
+                    ResetTable()
                 }
                 else {
                     Swal.fire('Error', 'Update Fail', 'error');

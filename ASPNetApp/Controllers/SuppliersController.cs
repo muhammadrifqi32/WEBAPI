@@ -1,6 +1,7 @@
-﻿using ASPNetApp.Models;
-using ASPNetApp.ViewModels;
+﻿//using ASPNetApp.ViewModels;
 using ASPNetApp.Base;
+using ASPNetApp.Models;
+using Data.ViewModel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace ASPNetApp.Controllers
     public class SuppliersController : Controller
     {
         Port getPort = new Base.Port();
-        //Bootcamp32Entities2 myContext = new Bootcamp32Entities2();
+        Bootcamp32Entities2 myContext = new Bootcamp32Entities2();
         readonly HttpClient client = new HttpClient();
         // GET: Suppliers
         public ActionResult Index()
